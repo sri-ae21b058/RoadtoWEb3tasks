@@ -6,21 +6,37 @@
 // global scope, and execute the script.
 const hre = require("hardhat");
 
+//return balance of a given address
+async function getBalance(address){
+  const balanceBigInt=await hre.waffle.provider.getBalance(address);
+  return hre.ethers.utils.formatEther(balanceBigInt);
+}
+
+//logs the ether balances for a list of addresses
+async function printBalances(addresses)
+{
+  let idx=0;
+  for(const address of addresses){
+    console.log(`Address ${idx} balance: `, await getBalance(address));
+    idx++;
+  }
+}
+
+//logs the memos stored on-chain from coffee purchase
+async function printMemos 
+{
+  for(const memo of memos)
+  {
+    const timestamp=memo.timestamp;
+    const tipper=memo.name;
+    const tipperAddress=memo.from;
+    const message=memo.message;
+    console.log(`At 4 ${timestamp},${tipper} (${tipperAddress}) said: "${message}"`);
+    
+  }
+}
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
-
-  const lockedAmount = hre.ethers.utils.parseEther("1");
-
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-  await lock.deployed();
-
-  console.log(
-    `Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`
-  );
+  //const [owner,tipper, tipper2, tipper3]
 }
 
 // We recommend this pattern to be able to use async/await everywhere
